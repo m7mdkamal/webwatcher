@@ -34,7 +34,7 @@ func (w RedditWatcher) Run() []Result {
 	redditResp := RedditResponse{}
 	err = json.Unmarshal(body, &redditResp)
 	if err != nil {
-
+		panic(err)
 	}
 	results = append(results, w.filter(redditResp)...)
 	// return filtered data
@@ -61,6 +61,7 @@ func (w RedditWatcher) filter(resp RedditResponse) []Result {
 			result.Title = post.Data.Title
 			result.Content = post.Data.Selftext
 			result.Url = post.Data.URL
+			result.Time = int64(post.Data.CreatedUtc)
 			results = append(results, result)
 		}
 	}
@@ -121,7 +122,7 @@ type RedditResponse struct {
 				Domain              string        `json:"domain"`
 				Hidden              bool          `json:"hidden"`
 				Thumbnail           string        `json:"thumbnail"`
-				Edited              bool          `json:"edited"`
+				Edited              interface{}   `json:"edited"`
 				LinkFlairCSSClass   interface{}   `json:"link_flair_css_class"`
 				AuthorFlairCSSClass interface{}   `json:"author_flair_css_class"`
 				ContestMode         bool          `json:"contest_mode"`

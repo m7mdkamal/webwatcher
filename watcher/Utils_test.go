@@ -11,6 +11,11 @@ func TestGenerateRegexp(t *testing.T) {
 		want   string
 	}{
 		{
+			name:   "no filter",
+			filter: "",
+			want:   "",
+		},
+		{
 			name:   "simple filter",
 			filter: "filters",
 			want:   "(filters)",

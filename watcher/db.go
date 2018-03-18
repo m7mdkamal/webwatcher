@@ -37,10 +37,11 @@ func InsertTask(task *Task) int64 {
 
 func SelectAllTasks() *[]Task {
 	var tasks []Task
-	rows, err := db.Query("SELECT name, watcherId, filter , parameters,interval, createdAt FROM tasks")
+	rows, err := db.Query("SELECT id, name, watcherId, filter , parameters,interval, createdAt FROM tasks")
 	defer rows.Close()
 	checkErr(err)
 	var (
+		id             int64
 		name           string
 		watcherId      int
 		filter         string
@@ -51,11 +52,39 @@ func SelectAllTasks() *[]Task {
 	)
 
 	for rows.Next() {
-		rows.Scan(&name, &watcherId, &filter, &parametersJson, &interval, &createdAt)
+		rows.Scan(&id, &name, &watcherId, &filter, &parametersJson, &interval, &createdAt)
 		json.Unmarshal([]byte(parametersJson), &parameters)
-		tasks = append(tasks, *NewTask(name, Reddit, filter, interval, parameters...))
+		tasks = append(tasks, *NewTask(id, name, Reddit, filter, interval, parameters...))
 	}
 	return &tasks
+}
+
+func InsertResult(result *Result) int64 {
+	stmt, err := db.Prepare("INSERT INTO results(taskId, title, content , url,time) values(?,?,?,?,?)")
+	checkErr(err)
+
+	res, err := stmt.Exec(result.TaskId, result.Title, result.Content, result.Url, result.Time)
+	checkErr(err)
+
+	id, err := res.LastInsertId()
+	checkErr(err)
+
+	return id
+}
+
+func GetLastResultByTask(task *Task) *Result {
+	rows, err := db.Query("SELECT title, content , url,time FROM results where taskId = ? order by id desc limit 1", task.ID)
+	defer rows.Close()
+	checkErr(err)
+
+	var (
+		result Result
+	)
+
+	for rows.Next() {
+		rows.Scan(&result.Title, &result.Content, &result.Url, &result.Time)
+	}
+	return &result
 }
 
 func checkErr(err error) {

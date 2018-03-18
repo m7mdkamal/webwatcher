@@ -21,6 +21,9 @@ func ContainKeywords(pattern string, paragraphs ...string) bool {
 }
 
 func GenerateRegexp(filters string) string {
+	if filters == "" {
+		return ""
+	}
 	filterArr := strings.Split(filters, ",")
 	for i, filter := range filterArr {
 		filterArr[i] = fmt.Sprintf("(%s)", strings.TrimSpace(filter))

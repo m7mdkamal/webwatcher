@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"log"
 	"sync"
 
@@ -18,23 +17,23 @@ func main() {
 	var wg sync.WaitGroup
 
 	testfunc := func(task watcher.Task) {
-		log.Printf("[%s] watcher started", task.Filter)
+		log.Printf("[%s] watcher started", task.Name)
 		results := task.Watcher.Run()
-		log.Printf("[%s] watcher found %d", task.Filter, len(results))
+		log.Printf("[%s] watcher found %d", task.Name, len(results))
 		for _, result := range results {
-			log.Printf("[%s] watcher found: %s", task.Filter, result.Title)
-
+			log.Printf("[%s] watcher found: %s", task.Name, result.Title)
+			result.TaskId = task.ID
+			watcher.InsertResult(&result)
 		}
 		err := beeep.Notify("Title", "Message body", "assets/information.png")
 		if err != nil {
 			panic(err)
 		}
-		log.Printf("[%s] watcher ended. Should start after %d secs", task.Filter, task.Interval)
+		log.Printf("[%s] watcher ended. Should start after %d secs", task.Name, task.Interval)
 		// wg.Done()
 	}
 
 	for _, task := range tasks {
-		fmt.Println(task)
 		s := gocron.NewScheduler()
 		s.Every(uint64(task.Interval)).Seconds().Do(testfunc, task)
 		go s.Start()

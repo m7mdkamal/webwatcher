@@ -4,5 +4,6 @@ type Result struct {
 	Title   string
 	Content string
 	Url     string
-	Time    string
+	Time    int64
+	TaskId  int64
 }
