@@ -9,12 +9,13 @@ type Watcher struct {
 
 // Task is what we search for
 type Task struct {
-	ID         int64         `db:"id"`
-	Name       string        `db:"name"`
-	WatcherID  int64         `db:"watcher_id"`
-	Filter     string        `db:"filter"`
-	Interval   int           `db:"interval"`
-	Parameters []interface{} `db:"parameters"`
+	ID         int64   `db:"id"`
+	Name       string  `db:"name"`
+	WatcherID  int64   `db:"watcher_id"`
+	Filter     string  `db:"filter"`
+	Interval   int     `db:"interval"`
+	Parameters string  `db:"parameters"`
+	CreatedAt  []uint8 `db:"created_at"`
 }
 
 // Result is record of information

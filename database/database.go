@@ -18,5 +18,5 @@ type Database interface {
 	CreateResult(result *model.Result) (int64, error)
 
 	// GetResultsByTask fetch results of a specific task
-	GetResultsByTask(task *model.Task) (int64, error)
+	GetResultsByTask(task *model.Task) ([]model.Result, error)
 }

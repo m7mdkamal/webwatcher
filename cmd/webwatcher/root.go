@@ -4,8 +4,11 @@ import (
 	"fmt"
 	"os"
 
+	"github.com/m7mdkamal/webwatcher/database"
 	"github.com/spf13/cobra"
 )
+
+var DB database.Database
 
 var rootCmd = &cobra.Command{
 	Use:   "webwatcher",
