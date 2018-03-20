@@ -137,13 +137,56 @@ func (db *SQLiteDatabase) DeleteTask(task *model.Task) error {
 }
 
 // CreateResult creates new result
-func (db *SQLiteDatabase) CreateResult(result *model.Result) (int64, error) {
-	panic("Not implemented")
+func (db *SQLiteDatabase) CreateResult(result *model.Result) (resultID int64, err error) {
+	// Prepare transaction
+	tx, err := db.Beginx()
+	if err != nil {
+		return -1, err
+	}
+
+	// Make sure to rollback if panic ever happened
+	defer func() {
+		if r := recover(); r != nil {
+			panicErr, _ := r.(error)
+			tx.Rollback()
+
+			resultID = -1
+			err = panicErr
+		}
+	}()
+
+	// Save article to database
+	res := tx.MustExec(`INSERT INTO results(task_id, title, content , url,time) values(?,?,?,?,?)`,
+		result.TaskID, result.Title, result.Content, result.URL, result.Time)
+
+	// Get last inserted ID
+	resultID, err = res.LastInsertId()
+	checkError(err)
+
+	// Commit transaction
+	err = tx.Commit()
+	checkError(err)
+
+	// return resultID, err
+	return
 }
 
 // GetResultsByTask fetch results of a specific task
-func (db *SQLiteDatabase) GetResultsByTask(task *model.Task) (int64, error) {
-	panic("Not implemented")
+func (db *SQLiteDatabase) GetResultsByTask(task *model.Task) ([]model.Result, error) {
+
+	results := []model.Result{}
+	stmtGetResults, err := db.Preparex("SELECT title, content , url,time FROM results where taskId = ? order by id desc limit 1")
+	if err != nil {
+		return nil, err
+	}
+	defer stmtGetResults.Close()
+	err = stmtGetResults.Select(&results, task.ID)
+
+	// exclude no rows error
+	if err != nil && err != sql.ErrNoRows {
+		return nil, err
+	}
+	return results, nil
 }
 
 func checkError(err error) {
