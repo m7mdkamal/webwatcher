@@ -6,6 +6,8 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
+
+	"github.com/m7mdkamal/webwatcher/model"
 )
 
 // RedditWatcher responsible to get the data from reddit
@@ -20,8 +22,8 @@ func NewRedditWatcher(sub string, filter string) *RedditWatcher {
 }
 
 // Run the watcher
-func (w RedditWatcher) Run() []Result {
-	var results []Result
+func (w RedditWatcher) Run() []model.Result {
+	var results []model.Result
 	resp, err := w.getResponse()
 	defer resp.Body.Close()
 	if err != nil {
@@ -51,16 +53,16 @@ func (w RedditWatcher) getResponse() (*http.Response, error) {
 	return client.Do(req)
 }
 
-func (w RedditWatcher) filter(resp RedditResponse) []Result {
+func (w RedditWatcher) filter(resp RedditResponse) []model.Result {
 
-	var results []Result
+	var results []model.Result
 
 	for _, post := range resp.Data.Children {
 		if ContainKeywords(w.filterRegexp, post.Data.Title, post.Data.Selftext) {
-			result := Result{}
+			result := model.Result{}
 			result.Title = post.Data.Title
 			result.Content = post.Data.Selftext
-			result.Url = post.Data.URL
+			result.URL = post.Data.URL
 			result.Time = int64(post.Data.CreatedUtc)
 			results = append(results, result)
 		}

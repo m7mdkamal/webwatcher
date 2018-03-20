@@ -1,12 +1,10 @@
 package watcher
 
-type WatcherType int
-
 const (
-	Reddit WatcherType = iota + 1
+	Reddit int64 = iota + 1
 )
 
-func IntToWatcherType(i int) WatcherType {
+func IntToWatcherType(i int64) int64 {
 	switch i {
 	case 1:
 		return Reddit
@@ -14,7 +12,7 @@ func IntToWatcherType(i int) WatcherType {
 	return Reddit
 }
 
-func NewWatcher(wt WatcherType, filter string, parameters ...interface{}) Watcher {
+func NewWatcher(wt int64, filter string, parameters ...interface{}) Watcher {
 	switch wt {
 	case Reddit:
 		filter := filter
