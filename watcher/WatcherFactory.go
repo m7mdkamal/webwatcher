@@ -12,7 +12,7 @@ func IntToWatcherType(i int64) int64 {
 	return Reddit
 }
 
-func NewWatcher(wt int64, filter string, parameters ...interface{}) Watcher {
+func NewWatcher(wt int64, filter string, parameters ...interface{}) WatcherWorker {
 	switch wt {
 	case Reddit:
 		filter := filter

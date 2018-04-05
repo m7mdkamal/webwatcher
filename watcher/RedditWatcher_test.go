@@ -1,9 +1,6 @@
 package watcher
 
-import (
-	"testing"
-)
-
+/*
 func TestGetUrl(t *testing.T) {
 	watcher := NewRedditWatcher("java", NewTask("java", "", 30))
 	url := watcher.getUrl()
@@ -34,3 +31,4 @@ func TestRun(t *testing.T) {
 	// 	t.Fatal(d.Data.Title)
 	// }
 }
+*/

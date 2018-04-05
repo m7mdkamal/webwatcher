@@ -69,6 +69,23 @@ func InitSQLiteDatabase(databasePath string) (*SQLiteDatabase, error) {
 	return &SQLiteDatabase{*db}, err
 }
 
+// GetWatcherByTask get watcher by task id
+func (db *SQLiteDatabase) GetWatcherByTask(task *model.Task) (*model.Watcher, error) {
+	watcher := model.Watcher{}
+	stmtGet, err := db.Preparex("SELECT id , name , created_at FROM watchers where id = ? desc limit 1")
+	if err != nil {
+		return nil, err
+	}
+	defer stmtGet.Close()
+	err = stmtGet.Select(&watcher, task.ID)
+
+	// exclude no rows error
+	if err != nil && err != sql.ErrNoRows {
+		return nil, err
+	}
+	return &watcher, nil
+}
+
 // CreateTask creates new task in db
 func (db *SQLiteDatabase) CreateTask(task *model.Task) (taskID int64, err error) {
 	// Check name and interval

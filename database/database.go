@@ -5,6 +5,9 @@ import "github.com/m7mdkamal/webwatcher/model"
 // Database is interface to CRUD data in database
 type Database interface {
 
+	// GetWatcherByTask get watcher by task id
+	GetWatcherByTask(task *model.Task) (*model.Watcher, error)
+
 	// CreateTask creates new task in db
 	CreateTask(task *model.Task) (int64, error)
 
