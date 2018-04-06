@@ -17,9 +17,15 @@ type Database interface {
 	// DeleteTask delete task from database
 	DeleteTask(task *model.Task) error
 
+	// DeleteTasks delete all tasks from database
+	DeleteTasks() error
+
 	// CreateResult creates new result
 	CreateResult(result *model.Result) (int64, error)
 
 	// GetResultsByTask fetch results of a specific task
 	GetResultsByTask(task *model.Task) ([]model.Result, error)
+
+	// DeleteResults delete all results from database
+	DeleteResults() error
 }
