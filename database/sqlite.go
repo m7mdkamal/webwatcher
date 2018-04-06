@@ -71,19 +71,21 @@ func InitSQLiteDatabase(databasePath string) (*SQLiteDatabase, error) {
 
 // GetWatcherByTask get watcher by task id
 func (db *SQLiteDatabase) GetWatcherByTask(task *model.Task) (*model.Watcher, error) {
-	watcher := model.Watcher{}
-	stmtGet, err := db.Preparex("SELECT id , name , created_at FROM watchers where id = ? desc limit 1")
+	watchers := []model.Watcher{}
+	stmtGet, err := db.Preparex("SELECT id , name , created_at FROM watchers where id = ? limit 1")
 	if err != nil {
 		return nil, err
 	}
 	defer stmtGet.Close()
-	err = stmtGet.Select(&watcher, task.ID)
+	err = stmtGet.Select(&watchers, task.ID)
 
 	// exclude no rows error
 	if err != nil && err != sql.ErrNoRows {
 		return nil, err
 	}
-	return &watcher, nil
+	fmt.Printf("%s\n", watchers)
+
+	return &watchers[0], nil
 }
 
 // CreateTask creates new task in db
@@ -138,7 +140,7 @@ func (db *SQLiteDatabase) CreateTask(task *model.Task) (taskID int64, err error)
 func (db *SQLiteDatabase) GetTasks() ([]model.Task, error) {
 
 	tasks := []model.Task{}
-	query := "SELECT id, name, watcher_id, filter , parameters,interval, created_at FROM tasks"
+	query := "SELECT id, name, watcher_id, filter, parameters, interval, created_at FROM tasks"
 
 	err := db.Select(&tasks, query)
 	// exclude no rows error
@@ -192,7 +194,7 @@ func (db *SQLiteDatabase) CreateResult(result *model.Result) (resultID int64, er
 func (db *SQLiteDatabase) GetResultsByTask(task *model.Task) ([]model.Result, error) {
 
 	results := []model.Result{}
-	stmtGetResults, err := db.Preparex("SELECT title, content , url,time FROM results where taskId = ? order by id desc limit 1")
+	stmtGetResults, err := db.Preparex("SELECT title, content, url, time FROM results where taskId = ? order by id desc limit 1")
 	if err != nil {
 		return nil, err
 	}

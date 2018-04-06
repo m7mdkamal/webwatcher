@@ -9,18 +9,20 @@ import (
 )
 
 func main() {
+
 	err := godotenv.Load()
 	if err != nil {
 		panic(err)
 	}
+
 	db, err := database.InitSQLiteDatabase(os.Getenv("SQLITE_DATABASE_PATH"))
 	if err != nil {
 		panic(err)
 	}
 
 	cmd.DB = db
-	cmd.Execute()
 
+	cmd.Execute()
 }
 
 // func main2() {

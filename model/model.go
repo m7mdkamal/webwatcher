@@ -4,18 +4,18 @@ package model
 type Watcher struct {
 	ID        int64  `db:"id"`
 	Name      string `db:"name"`
-	CreatedAt int64  `db:"created_at"`
+	CreatedAt string `db:"created_at"`
 }
 
 // Task is what we search for
 type Task struct {
-	ID         int64   `db:"id"`
-	Name       string  `db:"name"`
-	WatcherID  int64   `db:"watcher_id"`
-	Filter     string  `db:"filter"`
-	Interval   int     `db:"interval"`
-	Parameters string  `db:"parameters"`
-	CreatedAt  []uint8 `db:"created_at"`
+	ID         int64  `db:"id"`
+	Name       string `db:"name"`
+	WatcherID  int64  `db:"watcher_id"`
+	Filter     string `db:"filter"`
+	Interval   int    `db:"interval"`
+	Parameters string `db:"parameters"`
+	CreatedAt  string `db:"created_at"`
 }
 
 // Result is record of information
@@ -24,7 +24,7 @@ type Result struct {
 	Title   string `db:"title"`
 	Content string `db:"content"`
 	URL     string `db:"url"`
-	Time    int64  `db:"time"`
+	Time    string `db:"time"`
 	TaskID  int64  `db:"task_id"`
 }
 

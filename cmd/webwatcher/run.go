@@ -19,7 +19,7 @@ var runCmd = &cobra.Command{
 	Short: "Run tasks",
 	Long:  "Run tasks",
 	Run: func(cmd *cobra.Command, args []string) {
-
+		runTasks()
 	},
 }
 
@@ -30,12 +30,14 @@ func runTasks() {
 	if err != nil {
 		panic(err)
 	}
+
 	for _, task := range tasks {
 		s := gocron.NewScheduler()
 		s.Every(uint64(task.Interval)).Seconds().Do(single, task)
 		go s.Start()
 		wg.Add(1)
 	}
+	wg.Wait()
 }
 
 func single(task model.Task) {

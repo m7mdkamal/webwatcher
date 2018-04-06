@@ -6,6 +6,7 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
+	"time"
 
 	"github.com/m7mdkamal/webwatcher/model"
 )
@@ -63,7 +64,7 @@ func (w RedditWatcher) filter(resp RedditResponse) []model.Result {
 			result.Title = post.Data.Title
 			result.Content = post.Data.Selftext
 			result.URL = post.Data.URL
-			result.Time = int64(post.Data.CreatedUtc)
+			result.Time = time.Unix(int64(post.Data.CreatedUtc), 0).Format("2006-01-02 15:04:05")
 			results = append(results, result)
 		}
 	}
