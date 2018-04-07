@@ -157,7 +157,13 @@ func (db *SQLiteDatabase) DeleteTask(task *model.Task) error {
 
 // DeleteTasks delete all tasks from database
 func (db *SQLiteDatabase) DeleteTasks() error {
-	panic("Not implemented")
+	stmt, err := db.Prepare(`DELETE FROM tasks`)
+	checkError(err)
+	_, err = stmt.Exec()
+	if err != nil {
+		return err
+	}
+	return nil
 }
 
 // CreateResult creates new result
@@ -215,7 +221,13 @@ func (db *SQLiteDatabase) GetResultsByTask(task *model.Task) ([]model.Result, er
 
 // DeleteResults delete all results from database
 func (db *SQLiteDatabase) DeleteResults() error {
-	panic("Not implemented yet")
+	stmt, err := db.Prepare(`DELETE FROM results`)
+	checkError(err)
+	_, err = stmt.Exec()
+	if err != nil {
+		return err
+	}
+	return nil
 }
 
 func checkError(err error) {

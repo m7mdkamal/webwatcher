@@ -13,8 +13,8 @@ var resetCmd = &cobra.Command{
 	Short: "remove webwatcher tasks and results",
 	Long:  "remove webwatcher tasks and results",
 	Run: func(cmd *cobra.Command, args []string) {
-		resetTasks()
 		resetResults()
+		resetTasks()
 	},
 }
 
