@@ -152,7 +152,13 @@ func (db *SQLiteDatabase) GetTasks() ([]model.Task, error) {
 
 // DeleteTask delete task from database
 func (db *SQLiteDatabase) DeleteTask(task *model.Task) error {
-	panic("Not implemented")
+	stmt, err := db.Prepare("DELETE FROM tasks WHERE id = ?")
+	checkError(err)
+	_, err = stmt.Exec(task.ID)
+	if err != nil {
+		return err
+	}
+	return nil
 }
 
 // DeleteTasks delete all tasks from database
